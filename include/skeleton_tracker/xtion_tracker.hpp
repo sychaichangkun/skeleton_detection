@@ -34,10 +34,10 @@
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
 
-#include <skeleton_tracker/user_IDs.h>
-#include "skeleton_tracker/skeleton_tracker_state.h"
-#include "skeleton_tracker/joint_message.h"
-#include "skeleton_tracker/skeleton_message.h"
+#include <skeleton_detection/user_IDs.h>
+#include "skeleton_detection/skeleton_detection_state.h"
+#include "skeleton_detection/joint_message.h"
+#include "skeleton_detection/skeleton_message.h"
 #include <geometry_msgs/Pose.h>
 
 #include <opencv2/core/core.hpp>
@@ -93,7 +93,7 @@ double fy = 525.0;    // default values
 double cx = 319.5;    // default values
 double cy = 239.5;    // default values
 
-::skeleton_tracker::joint_message generate_joint_message(std::string joint_name, nite::JointType nite_type, JointMap &named_j, ::geometry_msgs::Pose &p, const nite::UserData& user)
+::skeleton_detection::joint_message generate_joint_message(std::string joint_name, nite::JointType nite_type, JointMap &named_j, ::geometry_msgs::Pose &p, const nite::UserData& user)
 {
   named_j[joint_name] = (user.getSkeleton().getJoint(nite_type));
 
@@ -101,7 +101,7 @@ double cy = 239.5;    // default values
   p.position.y = named_j[joint_name].getPosition().y/-1000;
   p.position.z = named_j[joint_name].getPosition().z/1000;
 
-  ::skeleton_tracker::joint_message msg;
+  ::skeleton_detection::joint_message msg;
   msg.name = joint_name;
   msg.pose = p;
   msg.confidence = named_j[joint_name].getPositionConfidence();
@@ -270,7 +270,7 @@ public:
     // Initialize the depth image publisher
     depthPub_ = it_.advertise("/"+camera+"/depth/image_raw", 1);
     // Initialize the users IDs publisher
-    userPub_ = nh_.advertise<skeleton_tracker::user_IDs>("/people", 1);
+    userPub_ = nh_.advertise<skeleton_detection::user_IDs>("/people", 1);
     sub = nh_.subscribe("/image_calib", 1000, chatterCallback);
     //
     //the goal publisher for test
@@ -327,9 +327,9 @@ public:
     // Initialize both the Camera Info publishers
     depthInfoPub_ = nh_.advertise<sensor_msgs::CameraInfo>("/"+camera+"/depth/camera_info", 1);
     rgbInfoPub_ = nh_.advertise<sensor_msgs::CameraInfo>("/"+camera+"/rgb/camera_info", 1);
-    incremental_msg_pub_ = nh_.advertise<skeleton_tracker::skeleton_message>("/skeleton_data/incremental", 1);
+    incremental_msg_pub_ = nh_.advertise<skeleton_detection::skeleton_message>("/skeleton_data/incremental", 1);
     // Initialize the skeleton state publisher
-    skeleton_state_pub_ = nh_.advertise<skeleton_tracker::skeleton_tracker_state>("skeleton_data/state", 10);
+    skeleton_state_pub_ = nh_.advertise<skeleton_detection::skeleton_detection_state>("skeleton_data/state", 10);
   }
   /**
    * Destructor
@@ -445,7 +445,7 @@ private:
    */
   void updateUserState(const nite::UserData& user, unsigned long long ts)
   {
-    ::skeleton_tracker::skeleton_tracker_state state_msg;
+    ::skeleton_detection::skeleton_detection_state state_msg;
 
     state_msg.userID = int(user.getId());
     state_msg.timepoint = ts;
@@ -551,7 +551,7 @@ private:
     int R1 = 31;
     int G1 = 210;
     int B1 = 170;
-    skeleton_tracker::user_IDs ids;
+    skeleton_detection::user_IDs ids;
     niteRc_ = userTracker_.readFrame(&userTrackerFrame_);
     if (niteRc_ != nite::STATUS_OK)
     {
@@ -892,7 +892,7 @@ private:
   ::geometry_msgs::Pose p;
   std::string joint_name;
 
-  ::skeleton_tracker::skeleton_message incremental_msg;             // left foot
+  ::skeleton_detection::skeleton_message incremental_msg;             // left foot
   ros::Publisher incremental_msg_pub_;
 
   // State of skeleton tracker publisher

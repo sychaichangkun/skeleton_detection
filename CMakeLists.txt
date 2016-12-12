@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(skeleton_tracker)
+project(skeleton_detection)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -34,7 +34,7 @@ add_message_files(
    joint_message.msg
    skeleton_message.msg
    robot_message.msg
-   skeleton_tracker_state.msg
+   skeleton_detection_state.msg
    SkeletonComplete.msg
 )
 
@@ -57,7 +57,7 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES skeleton_tracker
+  LIBRARIES skeleton_detection
   CATKIN_DEPENDS cv_bridge geometry_msgs image_transport kdl_conversions openni2_camera pcl_conversions pcl_ros roscpp roslib tf
   # actionlib_msgs
   DEPENDS system_lib opencv message_runtime
@@ -88,8 +88,8 @@ target_link_libraries(xtion_tracker OpenNI2 ${NITE2_LIB} ${OpenCV_LIBRARIES} ${c
 
 #target_link_libraries(${PROJECT_NAME} yaml-cpp)
 
-#add_executable(skeleton_tracker src/skeleton_tracker_node.cpp)
-#target_link_libraries(skeleton_tracker OpenNI2 NiTE2 ${NITE2_LIB} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
+#add_executable(skeleton_detection src/skeleton_detection_node.cpp)
+#target_link_libraries(skeleton_detection OpenNI2 NiTE2 ${NITE2_LIB} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
 #add_executable(tracker_publisher src/tracker_publisher.cpp)
 #target_link_libraries(tracker_publisher OpenNI2 ${NITE2_LIB} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
 

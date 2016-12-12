@@ -12,7 +12,7 @@ import numpy as np
 from std_msgs.msg import Header, String
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 # from strands_navigation_msgs.msg import TopologicalMap
-from skeleton_tracker.msg import joint_message, skeleton_tracker_state, skeleton_message, skeleton_complete
+from skeleton_detection.msg import joint_message, skeleton_detection_state, skeleton_message, skeleton_complete
 from mongodb_store.message_store import MessageStoreProxy
 import sensor_msgs.msg
 from cv_bridge import CvBridge
