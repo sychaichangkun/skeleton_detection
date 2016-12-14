@@ -1,7 +1,7 @@
 skeleton_detection
 ===============
 ROS骨骼检测程序
-功能:启动摄像头读取数据，发布RGBD信息，同时检测人体骨骼，输出所有检测出的骨骼坐标，并将其中置信度最高的用户坐标（头部）以/clicked_point的topic发布出去。适用于机器人对人体的定位和跟踪。
+功能:启动摄像头读取数据，发布RGBD信息，同时检测人体骨骼，输出所有检测出的骨骼坐标，并将其中置信度最高的用户坐标（头部）以/skeleton_point的topic发布出去。适用于机器人对人体的定位和跟踪。
 
 用到的包：
 `openni2_launch`&`openni2_tracker`: ROS上对OpenNI2和NiTE2的封装
@@ -36,15 +36,15 @@ ROS骨骼检测程序
 5. 运行
 
     ```bash
-    roslaunch skeleton_detection tracker.launch log_skeleton:=True message_store:=people_skeleton
+    roslaunch skeleton_detection tracker.launch
     ```
 
 
 ### 效果
 检测到人体的骨骼，发布各关节相对于/map的坐标，并将置信度最高的用户位置发布
-![marker](https://raw.githubusercontent.com/sychaichangkun/skeleton_detection/master/images/pic1.png)
+![demo](http://github.com/sychaichangkun/skeleton_detection/raw/master/images/pic1.png)
 
-![marker](https://raw.githubusercontent.com/sychaichangkun/skeleton_detection/master/images/pic2.png)
+![demo](http://github.com/sychaichangkun/skeleton_detection/raw/master/images/pic2.png)
 
 
 ### THANKS!
