@@ -42,9 +42,9 @@ ROS骨骼检测程序
 
 ### 效果
 检测到人体的骨骼，发布各关节相对于/map的坐标，并将置信度最高的用户位置发布
-![demo](http://github.com/sychaichangkun/skeleton_detection/raw/master/images/pic1.png)
+![demo](https://raw.githubusercontent.com/sychaichangkun/skeleton_detection/master/images/pic1.png)
 
-![demo](http://github.com/sychaichangkun/skeleton_detection/raw/master/images/pic2.png)
+![demo](https://raw.githubusercontent.com/sychaichangkun/skeleton_detection/master/images/pic2.png)
 
 
 ### THANKS!
