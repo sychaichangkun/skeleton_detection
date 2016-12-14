@@ -184,6 +184,15 @@ public:
       ros::shutdown();
       return;
     }
+    else
+    {
+      openni::Array<openni::DeviceInfo> devInfo;
+      openni::OpenNI::enumerateDevices(&devInfo);
+      for(int i=0;i<devInfo.getSize();i++)
+      {
+        std::cout<<"dev["<<i<<"]  uri   is "<<devInfo[i].getUri()<<std::endl;
+      }
+    }
 
     // Open the device
     if (devDevice_.open(openni::ANY_DEVICE) != openni::STATUS_OK)
@@ -274,7 +283,7 @@ public:
     sub = nh_.subscribe("/image_calib", 1000, chatterCallback);
     //
     //the goal publisher for test
-    goalPub = nh_.advertise<geometry_msgs::PointStamped>("/clicked_point", 1);
+    goalPub = nh_.advertise<geometry_msgs::PointStamped>("/skeleton_position", 1);
 
     // read yaml files
     std::ifstream fin(camera_calibration.c_str());
@@ -518,7 +527,7 @@ private:
    * @param j: the joint
    * @param uid: user's ID
    */
-  int count=0;
+  int count=1200;
   void publishJointTF(std::string j_name, nite::SkeletonJoint j, int uid)
   {
     if (j.getPositionConfidence() > 0.2)    // if (j.getPositionConfidence() > 0.0)
@@ -627,19 +636,18 @@ private:
                 frame_id = frame_id_stream.str();
                 listener.lookupTransform("map",frame_id,
                                         ros::Time(0), sk2map);
-                ROS_INFO("lookuptransform");
               }
               catch (tf::TransformException ex){
-                ROS_ERROR("%s",ex.what());
+                ROS_WARN("%s",ex.what());
                 return ;
               }
               geometry_msgs::TransformStamped tfstamped;
               tf::transformStampedTFToMsg(sk2map,tfstamped);
 
-              clicked_point.header.stamp=ros::Time::now();
-              clicked_point.header.frame_id="clicked_point";
-              clicked_point.point.x=tfstamped.transform.translation.x;//        clicked_point.point.x=j.getPosition().x / 1000.0;
-              clicked_point.point.y=tfstamped.transform.translation.y;
+              skeleton_position.header.stamp=ros::Time::now();
+              skeleton_position.header.frame_id="skeleton_position";
+              skeleton_position.point.x=tfstamped.transform.translation.x;//        skeleton_position.point.x=j.getPosition().x / 1000.0;
+              skeleton_position.point.y=tfstamped.transform.translation.y;
             }
           }
         }
@@ -725,9 +733,9 @@ private:
 
     //cck add
     //Publish the goal
-    if(count>500)
+    if(count>1500)
     {
-      goalPub.publish(clicked_point);
+      goalPub.publish(skeleton_position);
       count=0;
     }
 
@@ -812,8 +820,8 @@ private:
   /// Frame broadcaster
   tf::TransformBroadcaster tfBroadcast_;
 
-  //clicked_point:goal
-  geometry_msgs::PointStamped clicked_point;  //the variable clicked_point is updated in function PublishJointTF and sent in  publishJointGoal
+  //skeleton_position:goal
+  geometry_msgs::PointStamped skeleton_position;  //the variable skeleton_position is updated in function PublishJointTF and sent in  publishJointGoal
 
   //broadcast the tf between xtion_head_link and camera_link
   //listen to the tf from /xtion_head to /map
