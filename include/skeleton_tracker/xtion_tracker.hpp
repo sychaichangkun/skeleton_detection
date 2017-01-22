@@ -1,15 +1,3 @@
-/**
- * \ref xtion_tracker.hpp
- *
- *  \date 11/12/2015
- *  author Muhannad Alomari
- *  author Yiannis G.
- *  author Alessio Levratti
- *  version 1.0
- *  bug
- *  copyright GNU Public License.
- */
-
 #ifndef XTION_TRACKER_HPP_
 #define XTION_TRACKER_HPP_
 
@@ -210,7 +198,7 @@ public:
     if (depthStream_.create(devDevice_, openni::SENSOR_DEPTH) == openni::STATUS_OK)
     {
       depthMode_ = depthStream_.getSensorInfo().getSupportedVideoModes()[4];
-      ROS_INFO("The wished depth mode is %d x %d at %d FPS. Pixel format %d", depthMode_.getResolutionX(),
+      ROS_INFO("The w ished depth mode is %d x %d at %d FPS. Pixel format %d", depthMode_.getResolutionX(),
                depthMode_.getResolutionY(), depthMode_.getFps(), depthMode_.getPixelFormat());
       if (depthStream_.setVideoMode(depthMode_) != openni::STATUS_OK)
       {
@@ -219,7 +207,6 @@ public:
         ROS_INFO("The depth mode is set to %d x %d at %d FPS. Pixel format %d", depthMode_.getResolutionX(),
                  depthMode_.getResolutionY(), depthMode_.getFps(), depthMode_.getPixelFormat());
       }
-
       depthStream_.setMirroringEnabled(false);
     }
     else
@@ -332,6 +319,12 @@ public:
         ROS_INFO("camera calibration file could not be opened.");
     }
 
+//    //cck modified
+//    cv::FileStorage fSettings(strSettingPath, cv::FileStorage::READ);
+//    width = fSettings["Camera.width"];
+//    height = fSettings["Camera.height"];
+//   ROS_INFO("width:%d",width);
+//   ROS_INFO("height:%d",height);
 
     // Initialize both the Camera Info publishers
     depthInfoPub_ = nh_.advertise<sensor_msgs::CameraInfo>("/"+camera+"/depth/camera_info", 1);
@@ -571,8 +564,6 @@ private:
     // Get all the users
     const nite::Array<nite::UserData>& users = userTrackerFrame_.getUsers();
 
-
-
     //define maxUserConfidence to publish the most accurate user TF
      float maxUserConfidence=0.0;
      int maxUserID=0;
@@ -612,7 +603,6 @@ private:
         incremental_msg.time = ros::Time::now();
         incremental_msg_pub_.publish(incremental_msg);
 
-
         //////////////////////cck add
         float userConfidence=0.0;
         for (JointMap::iterator it=named_j.begin();it!=named_j.end();it++)
@@ -638,7 +628,7 @@ private:
                                         ros::Time(0), sk2map);
               }
               catch (tf::TransformException ex){
-                ROS_WARN("%s",ex.what());
+                //ROS_WARN("%s",ex.what());
                 return ;
               }
               geometry_msgs::TransformStamped tfstamped;
@@ -686,7 +676,7 @@ private:
             // cv::line(canvas, cv::Point(X[joint_mappinga1[i]],Y[joint_mappinga1[i]]),cv::Point(X[joint_mapping2[i]],Y[joint_mapping2[i]]),cv::Scalar(R1,G1,B1),3);
 
           for(int i=0;i<sizeof(joint_mapping1)/sizeof(*joint_mapping1);i++)
-            {
+          {
                 int x1 = Y[joint_mapping1[i]];
                 int x2 = Y[joint_mapping2[i]];
                 int y1 = X[joint_mapping1[i]];
@@ -697,8 +687,8 @@ private:
                 int angle = std::atan2(x1 - x2, y1 - y2)*180/3.14;
                 cv::ellipse( canvas, cv::Point(mY,mX), cv::Size(length, 9), angle, 0, 360, cv::Scalar( R[i], G[i], B[i] ), -1, 8);
             }
-
           cv::circle(canvas, cv::Point(X[0],Y[0]), 8.0, cv::Scalar(220,20,240), -1, 1);
+          ROS_INFO("(X[0],Y[0]) : (%d,%d)",X[0],Y[0]);
           mImage += canvas;
         }
 
@@ -738,7 +728,6 @@ private:
       goalPub.publish(skeleton_position);
       count=0;
     }
-
     msg_ = cv_bridge::CvImage(std_msgs::Header(), "rgb8", mImage).toImageMsg();
     msg_->header.frame_id = depth_frame;
     msg_->header.stamp = ros::Time::now();
