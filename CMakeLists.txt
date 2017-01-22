@@ -86,6 +86,7 @@ include_directories(${OpenCV_INCLUDE_DIRS}/include)
 add_executable(xtion_tracker src/xtion_tracker_node.cpp)
 target_link_libraries(xtion_tracker OpenNI2 ${NITE2_LIB} ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
 
+
 #target_link_libraries(${PROJECT_NAME} yaml-cpp)
 
 #add_executable(skeleton_detection src/skeleton_detection_node.cpp)
